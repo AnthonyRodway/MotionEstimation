@@ -1,18 +1,18 @@
 # the compiler: gcc for C program, define as g++ for C++
-  CC = gcc
+CC = gcc
 
-  # compiler flags:
-  #  -g    adds debugging information to the executable file
-  #  -Wall turns on most, but not all, compiler warnings
-  CFLAGS  = -g -Wall
+# compiler flags:
+#  -g    adds debugging information to the executable file
+#  -Wall turns on most, but not all, compiler warnings
+CFLAGS  = -g -Wall
 
-  # the build target executable:
-  TARGET = myprog
+# the build MAIN executable:
+MAIN = main
 
-  all: main
+all: $(MAIN)
 
-  $(TARGET): $(TARGET).c
-  	$(CC) $(CFLAGS) -o $(TARGET) $(TARGET).c
+$(MAIN): $(MAIN).c
+	$(CC) $(CFLAGS) -o $(MAIN) $(MAIN).c
 
-  clean:
-  	$(RM) $(TARGET)
+clean:
+	$(RM) $(MAIN) 
