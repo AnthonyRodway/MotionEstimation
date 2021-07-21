@@ -7,44 +7,63 @@
 #pragma pack(1)
 
 /*
- * Struct: Bitmap_Information
- * Parameters: (unsigned short) type            - The header field used to identify the BMP (2 bytes)
- *             (unsigned int) size              - The size of the BMP file in bytes (4 bytes)
- *             (unsigned short) reserved_1      - reserved section in the header (2 bytes)
- *             (unsigned short) reserved_2      - second reserved section in the header (2 bytes)
- *             (unsigned int) offset            - starting address, of the byte where the bitmap image data 
- *                                                (pixel array) can be found. (4 bytes)
- * Description: This structure holds all relevant information about the extracted bitmap info
- * Source: https://en.wikipedia.org/wiki/BMP_file_format
+ * BitmapHeader
+ * ============
+ * Holds all relevant information about a bitmap file.
+ * 
+ * type:       identifies the file as a bitmap image (2 bytes)
+ * size:       the size of the BMP file in bytes (4 bytes)
+ * reserved_1: first reserved section in the header (2 bytes)
+ * reserved_2: second reserved section in the header (2 bytes)
+ * offset:     starting address of the byte where the bitmap image data can be found (4 bytes)
+ * 
+ * Reference: https://en.wikipedia.org/wiki/BMP_file_format
  */
-typedef struct Bitmap_Information{
+typedef struct BitmapHeader {
     unsigned short type;
-    unsigned int size;
+    unsigned int   size;
     unsigned short reserved_1;
     unsigned short reserved_2;
-    unsigned int offset;
-    unsigned int width;
-    unsigned int height;
-} BITMAP_HEADER_INFORMATION;
+    unsigned int   offset;
+    unsigned int   width;
+    unsigned int   height;
+} BitmapHeader;
 
 /*
- * Function: get_luminance()
- * Parameters: (unsigned char) red   - the red component of the pixel
- *             (unsigned char) green - the green component of the pixel
- *             (unsigned char) blue  - the blue component of the pixel
- * Return: (unsigned char) - a char value with a value of the luminance of the pixel
- * Description: This functions purpose is to take the different components of the pixel
- *              and calculate a luminance value to return. This makes working with motion
- *              estimation easier.
- * Source: https://en.wikipedia.org/wiki/Relative_luminance 
+ * get_luminance
+ * =============
+ * Converts the red, green, and blue components of an RGB pixel into a relative luminance value.
+ * 
+ * red:   the red component of the pixel
+ * green: the green component of the pixel
+ * blue:  the blue component of the pixel
+ * 
+ * Returns the relative luminance value of the pixel
+ * 
+ * Reference(s): https://en.wikipedia.org/wiki/Relative_luminance 
  */
 unsigned char get_luminance(unsigned char red, unsigned char green, unsigned char blue);
 
 /*
- * Function: get_width_height()
- * Parameters: (FILE *) file                             - a reference to the specified file 
- *             (BITMAP_HEADER_INFORMATION *) information - a reference to the specified stuct
- * Return: (void) - no return
- * Description: This function
+ * get_width_height
+ * ================
+ * Extracts the width and height of a bitmap file.
+ *
+ * file:   reference to the bitmap file 
+ * header: reference to the bitmap header
+ * 
+ * No return value
  */
-void get_width_height(FILE *file, BITMAP_HEADER_INFORMATION *information);
+void get_width_height(FILE *file, BitmapHeader *header);
+
+/*
+ * print_bmp_header
+ * ================
+ * Prints a bitmap file header.
+ *
+ * filename: reference to the bitmap file name
+ * header:   reference to the bitmap file header
+ * 
+ * No return value
+ */
+void print_bmp_header(char *filename, BitmapHeader *header);

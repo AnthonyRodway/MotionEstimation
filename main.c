@@ -25,112 +25,96 @@
 //     }
 // }
 
-
-/*
- * Function: main()
- * Parameters: (int) argc     - stores number of command-line arguments passed by the user including the name of the program
- *             (char) *argv[] - is array of character pointers listing all the arguments
- * Return: (int) - an int value indicating how the program exited. 0 = normal, 1 = abnormal (error)
- * Description: This function is the main workhorse of the program, it will do all of the
- *              argument handeling, image processing and SAD handelling. 
- */
-int main(int argc, char *argv[]){
-    // add some argument error checking
-    if(argc != 3){
+int main(int argc, char *argv[]) {
+    // Argument validation
+    if (argc != 3) {
         printf("[Error] Incorrect Number of Arguments.\n");
         printf("Make sure input is in the form: ./main [reference file] [current file].\n");
         return 1;
     }
 
-    // get file names
-    char *reference_filename = argv[1];
-    char *current_filename = argv[2];
+    // Get file names from program arguments and open the files
+    char *reference_frame_filename = argv[1];
+    char *current_frame_filename = argv[2];
 
-    // declare pointers of type FILE and open the files
-    FILE *reference_file;
-    FILE *current_file;
+    FILE *reference_frame_fp;
+    FILE *current_frame_fp;
 
-    // open the files
-    reference_file = fopen(reference_filename, "rb");
-    current_file = fopen(current_filename, "rb");
+    reference_frame_fp = fopen(reference_frame_filename, "rb");
+    current_frame_fp = fopen(current_frame_filename, "rb");
 
-    // test to make sure the files exist
-    if (reference_file == NULL){
-        fprintf(stderr, "[Error] Failed to fopen %s.\n", reference_filename);
+    // File existence validation
+    if (reference_frame_fp == NULL) {
+        fprintf(stderr, "[Error] Failed to fopen %s.\n", reference_frame_filename);
         return 1;
     } 
 
-    if (current_file == NULL){
-        fprintf(stderr, "[Error] Failed to fopen %s.\n", current_filename);
+    if (current_frame_fp == NULL) {
+        fprintf(stderr, "[Error] Failed to fopen %s.\n", current_frame_filename);
         return 1;
     }
 
-    // get the bitmap headers for both of the files
-    BITMAP_HEADER_INFORMATION reference_header;
-    BITMAP_HEADER_INFORMATION current_header;
+    // Get the bitmap headers for both of the files
+    BitmapHeader reference_frame_header;
+    BitmapHeader current_frame_header;
 
-    // pull bitmap header info from the files
-    fread(&reference_header, sizeof(BITMAP_HEADER_INFORMATION), 1, reference_file);
-    fread(&current_header, sizeof(BITMAP_HEADER_INFORMATION), 1, current_file);
+    fread(&reference_frame_header, sizeof(BitmapHeader), 1, reference_frame_fp);
+    fread(&current_frame_header, sizeof(BitmapHeader), 1, current_frame_fp);
 
-    // test to make sure the files are .bmp ("MB")
-    if (reference_header.type != 0x4D42){
-        fprintf(stderr, "[Error] %s is not a .bmp file.\n", reference_filename);
+    // Verify the files are bmp type ("MB")
+    if (reference_frame_header.type != 0x4D42) {
+        fprintf(stderr, "[Error] %s is not a .bmp file.\n", reference_frame_filename);
         return 1;
     } 
 
-    if (current_header.type != 0x4D42){
-        fprintf(stderr, "[Error] %s is not a .bmp file.\n", current_filename);
+    if (current_frame_header.type != 0x4D42) {
+        fprintf(stderr, "[Error] %s is not a .bmp file.\n", current_frame_filename);
         return 1;
     }
     
-    // call get_width_height function to populate the structs with width and height too
-    get_width_height(reference_file, &reference_header);
-    get_width_height(current_file, &current_header);
+    // Get the width and height of the reference frame and current frame
+    get_width_height(reference_frame_fp, &reference_frame_header);
+    get_width_height(current_frame_fp, &current_frame_header);
 
-    printf("%s\ntype: %i\nsize: %i\nres1: %i\nres2: %i\noffset: %i\nwidth: %i\nheight: %i\n", reference_filename, reference_header.type, reference_header.size, reference_header.reserved_1, reference_header.reserved_2, reference_header.offset, reference_header.width, reference_header.height);
-    printf("\n");
-    printf("%s\ntype: %i\nsize: %i\nres1: %i\nres2: %i\noffset: %i\nwidth: %i\nheight: %i\n", current_filename, current_header.type, current_header.size, current_header.reserved_1, current_header.reserved_2, current_header.offset, current_header.width, current_header.height);
+    print_bmp_header(&reference_frame_filename, &reference_frame_header);
+    print_bmp_header(&current_frame_filename, &current_frame_header);
 
-    // initialize colour and other local variables needed
+    // Initialize variables to hold pixel colour components as well as counters
     unsigned char red, green, blue = 0;
     unsigned int i, j;
 
-    // initialized luminance arrays for rgb to luminance conversion
-    unsigned char reference_luminance[reference_header.height][reference_header.width];
-    unsigned char current_luminance[current_header.height][current_header.width];
+    // Initialize arrays to hold luminance values of both frames
+    unsigned char reference_frame_luminance[reference_frame_header.height][reference_frame_header.width];
+    unsigned char current_frame_luminance[current_frame_header.height][current_frame_header.width];
 
     // need to set the starting spot for seeking to offset
-    fseek(reference_file, reference_header.offset, SEEK_SET);
-    fseek(current_file, current_header.offset, SEEK_SET);
+    fseek(reference_frame_fp, reference_frame_header.offset, SEEK_SET);
+    fseek(current_frame_fp, current_frame_header.offset, SEEK_SET);
 
-    // nested for loop to go through every pixel on the image
-    for(i = 0; i < reference_header.height; i++){
-        for(j = 0; j < reference_header.width; j++){
-            // reference image
-            blue = fgetc(reference_file);
-            green = fgetc(reference_file);
-            red = fgetc(reference_file);
-            fgetc(reference_file);
-            reference_luminance[i][j] = get_luminance(red, green, blue);
-            //printf("%c ", reference_luminance[i][j]);
+    // Iterate through every pixel in both frames
+    for (i = 0; i < reference_frame_header.height; i++) {
+        for (j = 0; j < reference_frame_header.width; j++) {
+            // Reference frame
+            blue = fgetc(reference_frame_fp);
+            green = fgetc(reference_frame_fp);
+            red = fgetc(reference_frame_fp);
+            fgetc(reference_frame_fp);
+            reference_frame_luminance[i][j] = get_luminance(red, green, blue);
+            //printf("%c ", reference_frame_luminance[i][j]);
 
-            // current image
-            blue = fgetc(current_file);
-            green = fgetc(current_file);
-            red = fgetc(current_file);
-            fgetc(current_file);
-            current_luminance[i][j] = get_luminance(red, green, blue);
+            // Current frame
+            blue = fgetc(current_frame_fp);
+            green = fgetc(current_frame_fp);
+            red = fgetc(current_frame_fp);
+            fgetc(current_frame_fp);
+            current_frame_luminance[i][j] = get_luminance(red, green, blue);
         }
         //printf("\n");
     }
 
-    // close the files
-    fclose(reference_file);
-    fclose(current_file);
-
-    // start of the SAD algorithm
-
+    // Close the files
+    fclose(reference_frame_fp);
+    fclose(current_frame_fp);
 
     return 0;
 }
