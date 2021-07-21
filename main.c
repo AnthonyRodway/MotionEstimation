@@ -1,29 +1,8 @@
+#include <limits.h>
 #include "bmp_parser.h"
+#include "sad.c"
 
-/*
- * Function: sadComputation()
- * Parameters: (x, y) position of current block
- *             (r, s) motion vector(displacement of current block relative to reference block)
- * Return: none
- * Description: according to software solution 1 right now, bound to change...
- */
-// void sad_computation(int x, int y, int r, int s){
-//     int currentBlock[16][16], referenceBlock[16][16];
-//     int difference, sumAbsoluteDifferece = 0;
-//     int i, j;
-
-//     for(i = 0; i < 16; i++){
-//         for(j = 0; j < 16; j++){
-//             difference = currentBlock[x - i][y + j] - referenceBlock[(x + r) + i][(y + s) + j];
-            
-//             // get the absolute value
-//             if(difference < 0){
-//                 difference -= difference;
-//             }
-//             sumAbsoluteDifferece += difference;
-//         }
-//     }
-// }
+#define FRAME_SIZE 1024
 
 int main(int argc, char *argv[]) {
     // Argument validation
@@ -76,38 +55,41 @@ int main(int argc, char *argv[]) {
     get_width_height(reference_frame_fp, &reference_frame_header);
     get_width_height(current_frame_fp, &current_frame_header);
 
-    print_bmp_header(&reference_frame_filename, &reference_frame_header);
-    print_bmp_header(&current_frame_filename, &current_frame_header);
+    print_bmp_header(reference_frame_filename, &reference_frame_header);
+    print_bmp_header(current_frame_filename, &current_frame_header);
 
     // Initialize variables to hold pixel colour components as well as counters
     unsigned char red, green, blue = 0;
-    unsigned int i, j;
+    unsigned int x, y;
 
     // Initialize arrays to hold luminance values of both frames
-    unsigned char reference_frame_luminance[reference_frame_header.height][reference_frame_header.width];
-    unsigned char current_frame_luminance[current_frame_header.height][current_frame_header.width];
+    // unsigned char reference_frame_luminance[reference_frame_header.height][reference_frame_header.width];
+    // unsigned char current_frame_luminance[current_frame_header.height][current_frame_header.width];
+
+    unsigned char reference_frame_luminance[FRAME_SIZE][FRAME_SIZE];
+    unsigned char current_frame_luminance[FRAME_SIZE][FRAME_SIZE];
 
     // need to set the starting spot for seeking to offset
     fseek(reference_frame_fp, reference_frame_header.offset, SEEK_SET);
     fseek(current_frame_fp, current_frame_header.offset, SEEK_SET);
 
     // Iterate through every pixel in both frames
-    for (i = 0; i < reference_frame_header.height; i++) {
-        for (j = 0; j < reference_frame_header.width; j++) {
+    for (x = 0; x < reference_frame_header.height; x++) {
+        for (y = 0; y < reference_frame_header.width; y++) {
             // Reference frame
             blue = fgetc(reference_frame_fp);
             green = fgetc(reference_frame_fp);
             red = fgetc(reference_frame_fp);
             fgetc(reference_frame_fp);
-            reference_frame_luminance[i][j] = get_luminance(red, green, blue);
-            //printf("%c ", reference_frame_luminance[i][j]);
+            reference_frame_luminance[x][y] = get_luminance(red, green, blue);
+            //printf("%c ", reference_frame_luminance[x][y]);
 
             // Current frame
             blue = fgetc(current_frame_fp);
             green = fgetc(current_frame_fp);
             red = fgetc(current_frame_fp);
             fgetc(current_frame_fp);
-            current_frame_luminance[i][j] = get_luminance(red, green, blue);
+            current_frame_luminance[x][y] = get_luminance(red, green, blue);
         }
         //printf("\n");
     }
@@ -115,6 +97,72 @@ int main(int argc, char *argv[]) {
     // Close the files
     fclose(reference_frame_fp);
     fclose(current_frame_fp);
+
+    int temp_dx, temp_dy, dx, dy, temp = 0;
+    int temp_sad = INT_MAX;
+    
+    int block_height = reference_frame_header.height/BLOCK_SIZE;
+    int block_width = reference_frame_header.width/BLOCK_SIZE;
+
+    int sad[block_height][block_width];
+
+    // Iterate through each block in the current frame
+    for (y = 0; y < reference_frame_header.height/BLOCK_SIZE; y += BLOCK_SIZE) {
+        for (x = 0; x < reference_frame_header.width/BLOCK_SIZE; x += BLOCK_SIZE) {
+            // up
+            if (y >= BLOCK_SIZE) {
+                temp_dx = 0;
+                temp_dy = -BLOCK_SIZE;
+                temp = calculate_sad(&reference_frame_luminance, &current_frame_luminance, x, y, temp_dx, temp_dy);
+                if (temp < temp_sad) {
+                    temp_sad = temp;
+                    dx = temp_dx;
+                    dy = temp_dy;
+                }
+            }
+
+            // right
+            if (x <= block_width - BLOCK_SIZE) {
+                temp_dx = BLOCK_SIZE;
+                temp_dy = 0;
+                temp = calculate_sad(&reference_frame_luminance, &current_frame_luminance, x, y, temp_dx, temp_dy);
+                if (temp < temp_sad) {
+                    temp_sad = temp;
+                    dx = temp_dx;
+                    dy = temp_dy;
+                }
+            }
+            
+            // down
+            if (y <= block_height - BLOCK_SIZE) {
+                temp_dx = 0;
+                temp_dy = BLOCK_SIZE;
+                temp = calculate_sad(&reference_frame_luminance, &current_frame_luminance, x, y, temp_dx, temp_dy);
+                if (temp < temp_sad) {
+                    temp_sad = temp;
+                    dx = temp_dx;
+                    dy = temp_dy;
+                }
+            }
+
+            // left
+            if (x >= BLOCK_SIZE) {
+                temp_dx = -BLOCK_SIZE;
+                temp_dy = 0;
+                temp = calculate_sad(&reference_frame_luminance, &current_frame_luminance, x, y, temp_dx, temp_dy);
+                if (temp < temp_sad) {
+                    temp_sad = temp;
+                    dx = temp_dx;
+                    dy = temp_dy;
+                }
+            }
+
+            sad[y/BLOCK_SIZE][x/BLOCK_SIZE] = temp_sad;
+            printf("BLOCK %d, %d\n", x/BLOCK_SIZE, y/BLOCK_SIZE);
+            printf("Displacement: %d, %d\n", dx, dy);
+            printf("SAD: %d\n\n", temp_sad);
+        }
+    }
 
     return 0;
 }
