@@ -1,8 +1,15 @@
 #include <limits.h>
 #include "bmp_parser.h"
-#include "sad.c"
+#include "sad.h"
 
 #define FRAME_SIZE 1024
+
+void get_block(unsigned char frame[FRAME_SIZE][FRAME_SIZE], unsigned char block[BLOCK_SIZE][BLOCK_SIZE], int x, int y) {
+    int i, j = 0;
+    for (i = 0, j = y; i < BLOCK_SIZE && j < FRAME_SIZE; i++, j++) {
+        memcpy(block[i], frame[j]+x, sizeof(unsigned char) * BLOCK_SIZE);
+    }
+}
 
 int main(int argc, char *argv[]) {
     // Argument validation
@@ -11,6 +18,7 @@ int main(int argc, char *argv[]) {
         printf("Make sure input is in the form: ./main [reference file] [current file].\n");
         return 1;
     }
+    printf("HELLO");
 
     // Get file names from program arguments and open the files
     char *reference_frame_filename = argv[1];
@@ -99,21 +107,45 @@ int main(int argc, char *argv[]) {
     fclose(current_frame_fp);
 
     int temp_dx, temp_dy, dx, dy, temp = 0;
-    int temp_sad = INT_MAX;
+    int temp_sad;
     
     int block_height = reference_frame_header.height/BLOCK_SIZE;
     int block_width = reference_frame_header.width/BLOCK_SIZE;
 
-    int sad[block_height][block_width];
+    unsigned char current_block[BLOCK_SIZE][BLOCK_SIZE];
+    memset(current_block, 0, sizeof(current_block[0][0]) * BLOCK_SIZE * BLOCK_SIZE);
+
+    unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE];
+    memset(reference_block, 0, sizeof(reference_block[0][0]) * BLOCK_SIZE * BLOCK_SIZE);
+
+    struct Result sad[block_height][block_width];
 
     // Iterate through each block in the current frame
-    for (y = 0; y < reference_frame_header.height/BLOCK_SIZE; y += BLOCK_SIZE) {
-        for (x = 0; x < reference_frame_header.width/BLOCK_SIZE; x += BLOCK_SIZE) {
+    int ctr = 0;
+    for (y = 0; y < current_frame_header.height; y += BLOCK_SIZE) {
+        for (x = 0; x < current_frame_header.width; x += BLOCK_SIZE) {
+            ctr++;
+            temp_sad = INT_MAX;
+            // printf("current x, y = %d, %d\n", x, y);
+            get_block(current_frame_luminance, current_block, x, y);
+            
+            // identical block
+            temp_dx = 0;
+            temp_dy = 0;
+            get_block(reference_frame_luminance, reference_block, temp_dx, temp_dy);
+            temp = calculate_sad(reference_block, current_block, x, y, temp_dx, temp_dy);
+            if (temp < temp_sad) {
+                temp_sad = temp;
+                dx = temp_dx;
+                dy = temp_dy;
+            }
+
             // up
-            if (y >= BLOCK_SIZE) {
+            if (temp_sad > 0 && y >= BLOCK_SIZE) {
                 temp_dx = 0;
                 temp_dy = -BLOCK_SIZE;
-                temp = calculate_sad(&reference_frame_luminance, &current_frame_luminance, x, y, temp_dx, temp_dy);
+                get_block(reference_frame_luminance, reference_block, temp_dx, temp_dy);
+                temp = calculate_sad(reference_block, current_block, x, y, temp_dx, temp_dy);
                 if (temp < temp_sad) {
                     temp_sad = temp;
                     dx = temp_dx;
@@ -122,10 +154,11 @@ int main(int argc, char *argv[]) {
             }
 
             // right
-            if (x <= block_width - BLOCK_SIZE) {
+            if (temp_sad > 0 && x <= block_width - BLOCK_SIZE) {
                 temp_dx = BLOCK_SIZE;
                 temp_dy = 0;
-                temp = calculate_sad(&reference_frame_luminance, &current_frame_luminance, x, y, temp_dx, temp_dy);
+                get_block(reference_frame_luminance, reference_block, temp_dx, temp_dy);
+                temp = calculate_sad(reference_block, current_block, x, y, temp_dx, temp_dy);
                 if (temp < temp_sad) {
                     temp_sad = temp;
                     dx = temp_dx;
@@ -134,10 +167,11 @@ int main(int argc, char *argv[]) {
             }
             
             // down
-            if (y <= block_height - BLOCK_SIZE) {
+            if (temp_sad > 0 && y <= block_height - BLOCK_SIZE) {
                 temp_dx = 0;
                 temp_dy = BLOCK_SIZE;
-                temp = calculate_sad(&reference_frame_luminance, &current_frame_luminance, x, y, temp_dx, temp_dy);
+                get_block(reference_frame_luminance, reference_block, temp_dx, temp_dy);
+                temp = calculate_sad(reference_block, current_block, x, y, temp_dx, temp_dy);
                 if (temp < temp_sad) {
                     temp_sad = temp;
                     dx = temp_dx;
@@ -146,10 +180,11 @@ int main(int argc, char *argv[]) {
             }
 
             // left
-            if (x >= BLOCK_SIZE) {
+            if (temp_sad > 0 && x >= BLOCK_SIZE) {
                 temp_dx = -BLOCK_SIZE;
                 temp_dy = 0;
-                temp = calculate_sad(&reference_frame_luminance, &current_frame_luminance, x, y, temp_dx, temp_dy);
+                get_block(reference_frame_luminance, reference_block, temp_dx, temp_dy);
+                temp = calculate_sad(reference_block, current_block, x, y, temp_dx, temp_dy);
                 if (temp < temp_sad) {
                     temp_sad = temp;
                     dx = temp_dx;
@@ -157,12 +192,20 @@ int main(int argc, char *argv[]) {
                 }
             }
 
-            sad[y/BLOCK_SIZE][x/BLOCK_SIZE] = temp_sad;
-            printf("BLOCK %d, %d\n", x/BLOCK_SIZE, y/BLOCK_SIZE);
-            printf("Displacement: %d, %d\n", dx, dy);
-            printf("SAD: %d\n\n", temp_sad);
+            // sad[y/BLOCK_SIZE][x/BLOCK_SIZE].x = dx;
+            // sad[y/BLOCK_SIZE][x/BLOCK_SIZE].y = dy;
+            // sad[y/BLOCK_SIZE][x/BLOCK_SIZE].sad = temp_sad;
+            
+            // printf("BLOCK %d, %d\n", x/BLOCK_SIZE, y/BLOCK_SIZE);
+            // printf("Displacement: %d, %d\n", dx, dy);
+            // printf("SAD: %d\n\n", temp_sad);
+
+            if (dx != 0 || dy != 0) {
+                printf("Block (%d, %d) -> (%d, %d, %d)\n", x/BLOCK_SIZE, y/BLOCK_SIZE, dx, dy, temp_sad ); 
+            }
         }
     }
+    printf("Total number of blocks: %d\n", ctr);
 
     return 0;
 }

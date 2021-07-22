@@ -19,14 +19,11 @@ void print_matrix(unsigned char *arr, int rows, int columns) {
     }
 }
 
-void print_chunk(unsigned char arr[8][8], int x, int y) {
-    unsigned char chunk[4][4];
+void get_chunk(unsigned char arr[8][8], unsigned char chunk[4][4], int x, int y) {
     int i, j = 0;
-    memset(chunk, 0, sizeof(chunk[0][0]) * 4 * 4);
     for (i = 0, j = y; i < 4 && j < 8; i++, j++) {
         memcpy(chunk[i], arr[j]+x, sizeof(unsigned char) * 4);
     }
-    print_matrix(&chunk[0][0], 4, 4);
 }
 
 int main() {
@@ -46,9 +43,13 @@ int main() {
     print_matrix(&arr[0][0], 8, 8);
     printf("\n");
 
+    unsigned char chunk[4][4];
+    memset(chunk, 0, sizeof(chunk[0][0]) * 4 * 4);
+
     for (i = 0; i < 8; i+=4) {
         for (j = 0; j < 8; j+=4) {
-            print_chunk(arr, i, j);
+            get_chunk(arr, chunk, i, j);
+            print_matrix(&chunk[0][0], 4, 4);
             printf("\n");
         }
     }
