@@ -8,7 +8,6 @@
  * Return: none
  * Description: according to software solution 1 right now, bound to change...
  */
-// int calculate_sad(unsigned char reference_block[][FRAME_SIZE], unsigned char current_block[][FRAME_SIZE], int x, int y, int dx, int dy);
 int calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE], unsigned char current_block[BLOCK_SIZE][BLOCK_SIZE], int x, int y, int dx, int dy);
 
 struct Result {
