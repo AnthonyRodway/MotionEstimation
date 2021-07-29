@@ -1,5 +1,4 @@
 #define BLOCK_SIZE 8
-#define FRAME_SIZE 1024
 
 /*
  * Function: sadComputation()
