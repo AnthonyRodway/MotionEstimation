@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "test.h"
 
 void print_each_element(unsigned char *arr, int rows, int columns) {
     for (int i = 0; i < columns; i++) {
@@ -10,10 +8,19 @@ void print_each_element(unsigned char *arr, int rows, int columns) {
     }
 }
 
-void print_matrix(unsigned char *arr, int rows, int columns) {
-    for (int i = 0; i < columns; i++) {
-        for (int j = 0; j < rows; j++) {
-            printf("%4d ", *((arr+j*columns) + i));
+// void print_matrix(unsigned char *arr, int rows, int columns) {
+//     for (int i = 0; i < columns; i++) {
+//         for (int j = 0; j < rows; j++) {
+//             printf("%4d ", *((arr+j*columns) + i));
+//         }
+//         printf("\n");
+//     }
+// }
+
+void print_matrix(int height, int width, unsigned char arr[height][width]) {
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            printf("%4d ", arr[i][j]);
         }
         printf("\n");
     }
@@ -26,33 +33,33 @@ void get_chunk(unsigned char arr[8][8], unsigned char chunk[4][4], int x, int y)
     }
 }
 
-int main() {
-    unsigned char arr[8][8];
-    int ctr = 0;
-    int i, j = 0;
+// int main() {
+//     unsigned char arr[8][8];
+//     int ctr = 0;
+//     int i, j = 0;
 
-    // memset(arr, 0, sizeof(arr[0][0]) * 8 * 8);
+//     // memset(arr, 0, sizeof(arr[0][0]) * 8 * 8);
 
-    for (i = 0; i < 8; i++) {
-        for (j = 0; j < 8; j++) {
-            arr[j][i] = ctr++;
-        }
-    }
+//     for (i = 0; i < 8; i++) {
+//         for (j = 0; j < 8; j++) {
+//             arr[j][i] = ctr++;
+//         }
+//     }
 
-    // print_each_element(arr, 8, 8);
-    print_matrix(&arr[0][0], 8, 8);
-    printf("\n");
+//     // print_each_element(arr, 8, 8);
+//     print_matrix(&arr[0][0], 8, 8);
+//     printf("\n");
 
-    unsigned char chunk[4][4];
-    memset(chunk, 0, sizeof(chunk[0][0]) * 4 * 4);
+//     unsigned char chunk[4][4];
+//     memset(chunk, 0, sizeof(chunk[0][0]) * 4 * 4);
 
-    for (i = 0; i < 8; i+=4) {
-        for (j = 0; j < 8; j+=4) {
-            get_chunk(arr, chunk, i, j);
-            print_matrix(&chunk[0][0], 4, 4);
-            printf("\n");
-        }
-    }
+//     for (i = 0; i < 8; i+=4) {
+//         for (j = 0; j < 8; j+=4) {
+//             get_chunk(arr, chunk, i, j);
+//             print_matrix(&chunk[0][0], 4, 4);
+//             printf("\n");
+//         }
+//     }
 
-    return 0;
-}
+//     return 0;
+// }

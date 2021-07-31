@@ -1,6 +1,7 @@
 #include <limits.h>
 #include "bmp_parser.h"
 #include "sad.h"
+#include "test.h"
 
 int main(int argc, char *argv[]) {
     // Argument validation
@@ -83,19 +84,19 @@ int main(int argc, char *argv[]) {
             red = fgetc(current_frame_fp);
             current_frame_luminance[x][y] = get_luminance(red, green, blue);
         }
-        printf("\n");
+        // printf("\n");
     }
 
     // Close the files
     fclose(reference_frame_fp);
     fclose(current_frame_fp);
 
-    for (int i = 0; i < reference_frame_header.height; i++) {
-        for (int j = 0; j < reference_frame_header.width; j++) {
-            printf("%4d ", reference_frame_luminance[i][j]);
-        }
-        printf("\n");
-    }
+    // for (int i = 0; i < reference_frame_header.height; i++) {
+    //     for (int j = 0; j < reference_frame_header.width; j++) {
+    //         printf("%4d ", reference_frame_luminance[i][j]);
+    //     }
+    //     printf("\n");
+    // }
 
     // for (int i = reference_frame_header.height-1; i >= 0; i--) {
     //     for (int j = 0; j < reference_frame_header.width; j++) {
@@ -103,6 +104,8 @@ int main(int argc, char *argv[]) {
     //     }
     //     printf("\n");
     // }
+
+    print_matrix(reference_frame_header.height, reference_frame_header.width, reference_frame_luminance);
 
     // int temp_dx, temp_dy, dx, dy, temp = 0;
     // int temp_sad;
