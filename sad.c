@@ -18,3 +18,10 @@ int calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE], unsigne
     
     return sad; // :(
 }
+
+void get_block(int frame_size, unsigned char frame[frame_size][frame_size], unsigned char block[BLOCK_SIZE][BLOCK_SIZE], int x, int y) {
+    int i, j = 0;
+    for (i = 0, j = y; i < BLOCK_SIZE && j < frame_size; i++, j++) {
+        memcpy(block[i], frame[j]+x, sizeof(unsigned char) * BLOCK_SIZE);
+    }
+}

@@ -2,13 +2,6 @@
 #include "bmp_parser.h"
 #include "sad.h"
 
-void get_block(int frame_size, unsigned char frame[frame_size][frame_size], unsigned char block[BLOCK_SIZE][BLOCK_SIZE], int x, int y) {
-    int i, j = 0;
-    for (i = 0, j = y; i < BLOCK_SIZE && j < frame_size; i++, j++) {
-        memcpy(block[i], frame[j]+x, sizeof(unsigned char) * BLOCK_SIZE);
-    }
-}
-
 int main(int argc, char *argv[]) {
     // Argument validation
     if (argc != 3) {
@@ -97,12 +90,19 @@ int main(int argc, char *argv[]) {
     fclose(reference_frame_fp);
     fclose(current_frame_fp);
 
-    for (int i = reference_frame_header.height-1; i >= 0; i--) {
+    for (int i = 0; i < reference_frame_header.height; i++) {
         for (int j = 0; j < reference_frame_header.width; j++) {
             printf("%4d ", reference_frame_luminance[i][j]);
         }
         printf("\n");
     }
+
+    // for (int i = reference_frame_header.height-1; i >= 0; i--) {
+    //     for (int j = 0; j < reference_frame_header.width; j++) {
+    //         printf("%4d ", reference_frame_luminance[i][j]);
+    //     }
+    //     printf("\n");
+    // }
 
     // int temp_dx, temp_dy, dx, dy, temp = 0;
     // int temp_sad;
