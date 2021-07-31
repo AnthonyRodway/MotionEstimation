@@ -4,10 +4,10 @@
 int calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE], unsigned char current_block[BLOCK_SIZE][BLOCK_SIZE], int x, int y, int dx, int dy) {
     int diff, sad = 0;
     int i, j;
-    printf("SAD's perspective of reference block:\n");
-    print_matrix(BLOCK_SIZE, BLOCK_SIZE, reference_block);
-    printf("SAD's perspective of current block:\n");
-    print_matrix(BLOCK_SIZE, BLOCK_SIZE, current_block);
+    // printf("SAD's perspective of reference block:\n");
+    // print_matrix(BLOCK_SIZE, BLOCK_SIZE, reference_block);
+    // printf("SAD's perspective of current block:\n");
+    // print_matrix(BLOCK_SIZE, BLOCK_SIZE, current_block);
 
     for (i = 0; i < BLOCK_SIZE; i++) {
         for (j = 0; j < BLOCK_SIZE; j++){
