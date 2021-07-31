@@ -170,7 +170,7 @@ int main(int argc, char *argv[]) {
             }
 
             // right
-            if (temp_sad > 0 && x <= block_width - BLOCK_SIZE) {
+            if (temp_sad > 0 && x < current_frame_header.width - BLOCK_SIZE) {
                 temp_dx = BLOCK_SIZE;
                 temp_dy = 0;
                 get_block(current_frame_header.height, current_frame_luminance, current_block, x+temp_dx, y+temp_dy);
@@ -186,7 +186,7 @@ int main(int argc, char *argv[]) {
             }
             
             // down
-            if (temp_sad > 0 && y <= block_height - BLOCK_SIZE) {
+            if (temp_sad > 0 && y < current_frame_header.height - BLOCK_SIZE) {
                 temp_dx = 0;
                 temp_dy = BLOCK_SIZE;
                 get_block(current_frame_header.height, current_frame_luminance, current_block, x+temp_dx, y+temp_dy);
