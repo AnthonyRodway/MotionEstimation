@@ -105,8 +105,8 @@ int main(int argc, char *argv[]) {
     //     printf("\n");
     // }
 
-    print_matrix(reference_frame_header.height, reference_frame_header.width, reference_frame_luminance);
-    print_matrix(current_frame_header.height, current_frame_header.width, current_frame_luminance);
+    // print_matrix(reference_frame_header.height, reference_frame_header.width, reference_frame_luminance);
+    // print_matrix(current_frame_header.height, current_frame_header.width, current_frame_luminance);
 
     int temp_dx, temp_dy, temp_sad, dx, dy, temp;
     
@@ -135,18 +135,18 @@ int main(int argc, char *argv[]) {
             ctr++;
             temp_sad = INT_MAX;
             get_block(reference_frame_header.height, reference_frame_luminance, reference_block, x, y);
-            printf("\n");
-            printf("Looking at Reference Block:\n");
-            print_matrix(BLOCK_SIZE, BLOCK_SIZE, reference_block);
-            printf("\n");
+            // printf("\n");
+            // printf("Looking at Reference Block:\n");
+            // print_matrix(BLOCK_SIZE, BLOCK_SIZE, reference_block);
+            // printf("\n");
 
             // identical block
             temp_dx = 0;
             temp_dy = 0;
             get_block(current_frame_header.height, current_frame_luminance, current_block, x+temp_dx, y+temp_dy);
-            printf("Checking Current Block:\n");
-            print_matrix(BLOCK_SIZE, BLOCK_SIZE, current_block);
-            printf("\n");
+            // printf("Checking Current Block:\n");
+            // print_matrix(BLOCK_SIZE, BLOCK_SIZE, current_block);
+            // printf("\n");
             temp = calculate_sad(reference_block, current_block, x, y, temp_dx, temp_dy);
             if (temp < temp_sad) {
                 temp_sad = temp;
@@ -160,9 +160,9 @@ int main(int argc, char *argv[]) {
                 for (i = -1; i >= -BLOCK_SIZE; i--) {
                     temp_dy = i;
                     get_block(current_frame_header.height, current_frame_luminance, current_block, x+temp_dx, y+temp_dy);
-                    printf("Checking Current Block:\n");
-                    print_matrix(BLOCK_SIZE, BLOCK_SIZE, current_block);
-                    printf("\n");
+                    // printf("Checking Current Block:\n");
+                    // print_matrix(BLOCK_SIZE, BLOCK_SIZE, current_block);
+                    // printf("\n");
                     temp = calculate_sad(reference_block, current_block, x, y, temp_dx, temp_dy);
                     if (temp < temp_sad) {
                         temp_sad = temp;
@@ -179,9 +179,9 @@ int main(int argc, char *argv[]) {
                 for (i = 1; i <= BLOCK_SIZE; i++) {
                     temp_dx = i;
                     get_block(current_frame_header.height, current_frame_luminance, current_block, x+temp_dx, y+temp_dy);
-                    printf("Checking Current Block:\n");
-                    print_matrix(BLOCK_SIZE, BLOCK_SIZE, current_block);
-                    printf("\n");
+                    // printf("Checking Current Block:\n");
+                    // print_matrix(BLOCK_SIZE, BLOCK_SIZE, current_block);
+                    // printf("\n");
                     temp = calculate_sad(reference_block, current_block, x, y, temp_dx, temp_dy);
                     if (temp < temp_sad) {
                         temp_sad = temp;
@@ -198,9 +198,9 @@ int main(int argc, char *argv[]) {
                 for (i = 1; i <= BLOCK_SIZE; i++) {
                     temp_dy = BLOCK_SIZE;
                     get_block(current_frame_header.height, current_frame_luminance, current_block, x+temp_dx, y+temp_dy);
-                    printf("Checking Current Block:\n");
-                    print_matrix(BLOCK_SIZE, BLOCK_SIZE, current_block);
-                    printf("\n");
+                    // printf("Checking Current Block:\n");
+                    // print_matrix(BLOCK_SIZE, BLOCK_SIZE, current_block);
+                    // printf("\n");
                     temp = calculate_sad(reference_block, current_block, x, y, temp_dx, temp_dy);
                     if (temp < temp_sad) {
                         temp_sad = temp;
@@ -218,9 +218,9 @@ int main(int argc, char *argv[]) {
                     temp_dx = i;
                     get_block(current_frame_header.height, current_frame_luminance, current_block, x+temp_dx, y+temp_dy);
                     temp = calculate_sad(reference_block, current_block, x, y, temp_dx, temp_dy);
-                    printf("Checking Current Block:\n");
-                    print_matrix(BLOCK_SIZE, BLOCK_SIZE, current_block);
-                    printf("\n");
+                    // printf("Checking Current Block:\n");
+                    // print_matrix(BLOCK_SIZE, BLOCK_SIZE, current_block);
+                    // printf("\n");
                     if (temp < temp_sad) {
                         temp_sad = temp;
                         dx = temp_dx;
@@ -229,6 +229,95 @@ int main(int argc, char *argv[]) {
                     if (temp_sad == 0) break;
                 }
             }
+
+            // down left
+            if (temp_sad > 0 && x >= BLOCK_SIZE && y < current_frame_header.height - BLOCK_SIZE) {
+                for (i = -1; i >= -BLOCK_SIZE; i--) { // left
+                    for (j = 1; j <= BLOCK_SIZE; j++) { // down
+                        temp_dx = i;
+                        temp_dy = j;
+                        get_block(current_frame_header.height, current_frame_luminance, current_block, x+temp_dx, y+temp_dy);
+                        temp = calculate_sad(reference_block, current_block, x, y, temp_dx, temp_dy);
+                        // printf("Checking Current Block:\n");
+                        // print_matrix(BLOCK_SIZE, BLOCK_SIZE, current_block);
+                        // printf("\n");
+                        if (temp < temp_sad) {
+                            temp_sad = temp;
+                            dx = temp_dx;
+                            dy = temp_dy;
+                        }
+                        if (temp_sad == 0) break;
+                    }
+                    if (temp_sad == 0) break;
+                }
+            }
+
+            // up left
+            if (temp_sad > 0 && x >= BLOCK_SIZE && y >= BLOCK_SIZE) {
+                for (i = -1; i >= -BLOCK_SIZE; i--) { // left
+                    for (j = -1; j >= -BLOCK_SIZE; j--) { // up
+                        temp_dx = i;
+                        temp_dy = j;
+                        get_block(current_frame_header.height, current_frame_luminance, current_block, x+temp_dx, y+temp_dy);
+                        temp = calculate_sad(reference_block, current_block, x, y, temp_dx, temp_dy);
+                        // printf("Checking Current Block:\n");
+                        // print_matrix(BLOCK_SIZE, BLOCK_SIZE, current_block);
+                        // printf("\n");
+                        if (temp < temp_sad) {
+                            temp_sad = temp;
+                            dx = temp_dx;
+                            dy = temp_dy;
+                        }
+                        if (temp_sad == 0) break;
+                    }
+                    if (temp_sad == 0) break;
+                }
+            }
+
+            // up right
+            if (temp_sad > 0 && x < current_frame_header.width - BLOCK_SIZE && y >= BLOCK_SIZE) {
+                for (i = 1; i <= BLOCK_SIZE; i++) { // right
+                    for (j = -1; j >= -BLOCK_SIZE; j--) { // up
+                        temp_dx = i;
+                        temp_dy = j;
+                        get_block(current_frame_header.height, current_frame_luminance, current_block, x+temp_dx, y+temp_dy);
+                        temp = calculate_sad(reference_block, current_block, x, y, temp_dx, temp_dy);
+                        // printf("Checking Current Block:\n");
+                        // print_matrix(BLOCK_SIZE, BLOCK_SIZE, current_block);
+                        // printf("\n");
+                        if (temp < temp_sad) {
+                            temp_sad = temp;
+                            dx = temp_dx;
+                            dy = temp_dy;
+                        }
+                        if (temp_sad == 0) break;
+                    }
+                    if (temp_sad == 0) break;
+                }
+            }
+
+            // down right
+            if (temp_sad > 0 && x < current_frame_header.width - BLOCK_SIZE && y < current_frame_header.height - BLOCK_SIZE) {
+                for (i = 1; i <= BLOCK_SIZE; i++) { // right
+                    for (j = 1; j <= BLOCK_SIZE; j++) { // down
+                        temp_dx = i;
+                        temp_dy = j;
+                        get_block(current_frame_header.height, current_frame_luminance, current_block, x+temp_dx, y+temp_dy);
+                        temp = calculate_sad(reference_block, current_block, x, y, temp_dx, temp_dy);
+                        // printf("Checking Current Block:\n");
+                        // print_matrix(BLOCK_SIZE, BLOCK_SIZE, current_block);
+                        // printf("\n");
+                        if (temp < temp_sad) {
+                            temp_sad = temp;
+                            dx = temp_dx;
+                            dy = temp_dy;
+                        }
+                        if (temp_sad == 0) break;
+                    }
+                    if (temp_sad == 0) break;
+                }
+            }
+
 
             // sad[y/BLOCK_SIZE][x/BLOCK_SIZE].x = dx;
             // sad[y/BLOCK_SIZE][x/BLOCK_SIZE].y = dy;
