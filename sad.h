@@ -3,6 +3,21 @@
 #define BLOCK_SIZE 8
 
 /*
+ * Result
+ * ============
+ * Will hold 
+ * 
+ * x:       
+ * y:       
+ * sad: 
+ */
+struct Result {
+    int x;
+    int y;
+    int sad;
+} Result;
+
+/*
  * calculate_sad
  * =============
  * Calculates the sum of absolute values (SAD) between two blocks of size BLOCK_SIZE
@@ -32,8 +47,3 @@ int calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE], unsigne
  */
 void get_block(int frame_size, unsigned char frame[frame_size][frame_size], unsigned char block[BLOCK_SIZE][BLOCK_SIZE], int x, int y);
 
-struct Result {
-    int x;
-    int y;
-    int sad;
-} Result;

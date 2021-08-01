@@ -1,9 +1,5 @@
 #include "bmp_parser.h"
 
-unsigned char get_luminance(unsigned char red, unsigned char green, unsigned char blue) {
-    return ( ( 0.2126 * red ) + ( 0.7152 * green ) + ( 0.0722 * blue) );
-}
-
 void get_width_height(FILE *file, BitmapHeader *header) {
     unsigned int LENGTH = 8;    // Number of bits needed for both width and height
     unsigned char data[LENGTH]; // Array to hold the header information
@@ -14,21 +10,21 @@ void get_width_height(FILE *file, BitmapHeader *header) {
     fread(data, sizeof(unsigned char), LENGTH, file);    
 
     // Initialize all local variables and clear struct members that will be changed
-    unsigned int temp = 0, i = 0;
+    unsigned int byte_info = 0, i = 0;
     header->width = 0;
     header->height = 0;
 
     // Traverse through bytes 0-3 to get the width
-    for(i = 0; i < LENGTH/2; i++){
-        temp = (unsigned int) data[i] << (i * 8);
-        header->width += temp;
+    for(i = 0; i < LENGTH / 2; i++){
+        byte_info = (unsigned int) data[i] << (i * 8);
+        header->width += byte_info;
     }
     
     // Traverse through bytes 4-7 to get the height
-    temp = 0;
+    byte_info = 0;
     for(i = 4; i < LENGTH; i++){
-        temp = (unsigned int) data[i] << (i * 8);
-        header->height += temp;
+        byte_info = (unsigned int) data[i] << (i * 8);
+        header->height += byte_info;
     }
 
     //printf("\nwidth %i and height %i\n", header->width, header->height);

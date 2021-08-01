@@ -1,0 +1,4 @@
+Block ( x-block, y-block ) -> ( x-displacement, y-displacement, SAD )
+_____________________________________________________________________
+Block (       1,       2 ) -> (              0,             -1,   0 )
+Block (       0,       3 ) -> (              8,             -8,   0 )

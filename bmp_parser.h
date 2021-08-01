@@ -30,21 +30,6 @@ typedef struct BitmapHeader {
 } BitmapHeader;
 
 /*
- * get_luminance
- * =============
- * Converts the red, green, and blue components of an RGB pixel into a relative luminance value.
- * 
- * red:   the red component of the pixel
- * green: the green component of the pixel
- * blue:  the blue component of the pixel
- * 
- * Returns the relative luminance value of the pixel
- * 
- * Reference(s): https://en.wikipedia.org/wiki/Relative_luminance 
- */
-unsigned char get_luminance(unsigned char red, unsigned char green, unsigned char blue);
-
-/*
  * get_width_height
  * ================
  * Extracts the width and height of a bitmap file.
