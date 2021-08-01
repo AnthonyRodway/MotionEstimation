@@ -8,11 +8,15 @@ CFLAGS  = -g -Wall
 
 # the build MAIN executable:
 MAIN = main
+BMP = bmp_parser
+SAD = sad
+TEST = test
 
 all: $(MAIN)
 
 $(MAIN): $(MAIN).c
-	$(CC) $(CFLAGS) -o $(MAIN) $(MAIN).c
+	$(CC) $(CFLAGS) -o $(MAIN) $(MAIN).c $(BMP).c $(SAD).c $(TEST).c
 
 clean:
+	@echo "Cleaning All Executables" 
 	$(RM) $(MAIN) 

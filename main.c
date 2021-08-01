@@ -120,7 +120,7 @@ int main(int argc, char *argv[]) {
     unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE];
     memset(reference_block, 0, sizeof(reference_block[0][0]) * BLOCK_SIZE * BLOCK_SIZE);
 
-    struct Result sad_results[reference_frame_header.height/BLOCK_SIZE][reference_frame_header.width/BLOCK_SIZE];
+    // struct Result sad_results[reference_frame_header.height/BLOCK_SIZE][reference_frame_header.width/BLOCK_SIZE];
 
     // get_block(current_frame_header.height, current_frame_luminance, current_block, 0, current_frame_header.height-BLOCK_SIZE);
     // print_matrix(BLOCK_SIZE, BLOCK_SIZE, current_block);
