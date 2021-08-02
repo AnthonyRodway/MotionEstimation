@@ -22,12 +22,15 @@ struct Result {
  * =============
  * Calculates the sum of absolute values (SAD) between two blocks of size BLOCK_SIZE
  * 
- * reference_block: the reference block being looked at
- * current_block: the current block being looked at
+ * frame_size: the size of the frame 
+ * frame:      the frame
+ * block:      a block to store the result
+ * x:          the x position of the current block
+ * y:          the y position of the current block
  * 
- * Return the sad of the two blocks.
+ * No return value.
  */
-int calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE], unsigned char current_block[BLOCK_SIZE][BLOCK_SIZE]);
+int calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE], unsigned char current_block[BLOCK_SIZE][BLOCK_SIZE], int x, int y, int dx, int dy);
 
 /*
  * get_block

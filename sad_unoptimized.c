@@ -1,9 +1,14 @@
-#include "sad.h"
+#include "sad_unoptimized.h"
 #include "test.h"
 
-int calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE], unsigned char current_block[BLOCK_SIZE][BLOCK_SIZE]) {
+int calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE], unsigned char current_block[BLOCK_SIZE][BLOCK_SIZE], int x, int y, int dx, int dy) {
     // declare local variables
     int i, j, diff, sad = 0;
+    
+    // printf("SAD's perspective of reference block:\n");
+    // print_matrix(BLOCK_SIZE, BLOCK_SIZE, reference_block);
+    // printf("SAD's perspective of current block:\n");
+    // print_matrix(BLOCK_SIZE, BLOCK_SIZE, current_block);
 
     // enter nested for loops to travers the 8x8 blocks 
     for (i = 0; i < BLOCK_SIZE; i++) {
