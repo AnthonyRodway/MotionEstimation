@@ -1,7 +1,7 @@
 #include "bmp_parser.h"
 
 void get_width_height(FILE *file, BitmapHeader *header) {
-    unsigned int LENGTH = 8;    // Number of bits needed for both width and height
+    register unsigned int LENGTH = 8;    // Number of bits needed for both width and height
     unsigned char data[LENGTH]; // Array to hold the header information
 
     // For the specified file, set the place we want to start seeking from 
@@ -10,7 +10,7 @@ void get_width_height(FILE *file, BitmapHeader *header) {
     fread(data, sizeof(unsigned char), LENGTH, file);    
 
     // Initialize all local variables and clear struct members that will be changed
-    unsigned int byte_info = 0, i = 0;
+    register unsigned int byte_info = 0, i = 0;
     header->width = 0;
     header->height = 0;
 
