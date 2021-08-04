@@ -90,7 +90,8 @@ int main(int argc, char *argv[]) {
     fclose(reference_frame_fp);
     fclose(current_frame_fp);
 
-    int temp_dx, temp_dy, temp_sad, dx, dy, sad;
+    int temp_dx, temp_dy, temp_sad, dx, dy;
+    unsigned int sad;
 
     unsigned char current_block[BLOCK_SIZE][BLOCK_SIZE];
     memset(current_block, 0, sizeof(current_block[0][0]) * BLOCK_SIZE * BLOCK_SIZE);
@@ -108,7 +109,7 @@ int main(int argc, char *argv[]) {
             temp_dx = 0;
             temp_dy = 0;
             get_block(current_frame_header.height, current_frame_luminance, current_block, x+temp_dx, y+temp_dy);
-            sad = calculate_sad(reference_block, current_block, x, y, temp_dx, temp_dy);
+            sad = calculate_sad(reference_block, current_block);
 
             if (sad < temp_sad) {
                 temp_sad = sad;
@@ -121,7 +122,7 @@ int main(int argc, char *argv[]) {
                 temp_dx = 0;
                 temp_dy = -BLOCK_SIZE;
                 get_block(current_frame_header.height, current_frame_luminance, current_block, x+temp_dx, y+temp_dy);
-                sad = calculate_sad(reference_block, current_block, x, y, temp_dx, temp_dy);
+                sad = calculate_sad(reference_block, current_block);
 
                 if (sad < temp_sad) {
                     temp_sad = sad;
@@ -135,7 +136,7 @@ int main(int argc, char *argv[]) {
                 temp_dx = BLOCK_SIZE;
                 temp_dy = -BLOCK_SIZE;
                 get_block(current_frame_header.height, current_frame_luminance, current_block, x+temp_dx, y+temp_dy);
-                sad = calculate_sad(reference_block, current_block, x, y, temp_dx, temp_dy);
+                sad = calculate_sad(reference_block, current_block);
 
                 if (sad < temp_sad) {
                     temp_sad = sad;
@@ -149,7 +150,7 @@ int main(int argc, char *argv[]) {
                 temp_dy = 0;
                 temp_dx = BLOCK_SIZE;
                 get_block(current_frame_header.height, current_frame_luminance, current_block, x+temp_dx, y+temp_dy);
-                sad = calculate_sad(reference_block, current_block, x, y, temp_dx, temp_dy);
+                sad = calculate_sad(reference_block, current_block);
 
                 if (sad < temp_sad) {
                     temp_sad = sad;
@@ -163,7 +164,7 @@ int main(int argc, char *argv[]) {
                 temp_dx = BLOCK_SIZE;
                 temp_dy = BLOCK_SIZE;
                 get_block(current_frame_header.height, current_frame_luminance, current_block, x+temp_dx, y+temp_dy);
-                sad = calculate_sad(reference_block, current_block, x, y, temp_dx, temp_dy);
+                sad = calculate_sad(reference_block, current_block);
 
                 if (sad < temp_sad) {
                     temp_sad = sad;
@@ -178,7 +179,7 @@ int main(int argc, char *argv[]) {
                 temp_dy = BLOCK_SIZE;
                 get_block(current_frame_header.height, current_frame_luminance, current_block, x+temp_dx, y+temp_dy);
 
-                sad = calculate_sad(reference_block, current_block, x, y, temp_dx, temp_dy);
+                sad = calculate_sad(reference_block, current_block);
                 if (sad < temp_sad) {
                     temp_sad = sad;
                     dx = temp_dx;
@@ -191,7 +192,7 @@ int main(int argc, char *argv[]) {
                 temp_dx = -BLOCK_SIZE;
                 temp_dy = BLOCK_SIZE;
                 get_block(current_frame_header.height, current_frame_luminance, current_block, x+temp_dx, y+temp_dy);
-                sad = calculate_sad(reference_block, current_block, x, y, temp_dx, temp_dy);
+                sad = calculate_sad(reference_block, current_block);
 
                 if (sad < temp_sad) {
                     temp_sad = sad;
@@ -205,7 +206,7 @@ int main(int argc, char *argv[]) {
                 temp_dy = 0;
                 temp_dx = -BLOCK_SIZE;
                 get_block(current_frame_header.height, current_frame_luminance, current_block, x+temp_dx, y+temp_dy);
-                sad = calculate_sad(reference_block, current_block, x, y, temp_dx, temp_dy);
+                sad = calculate_sad(reference_block, current_block);
 
                 if (sad < temp_sad) {
                     temp_sad = sad;
@@ -219,7 +220,7 @@ int main(int argc, char *argv[]) {
                 temp_dx = -BLOCK_SIZE;
                 temp_dy = -BLOCK_SIZE;
                 get_block(current_frame_header.height, current_frame_luminance, current_block, x+temp_dx, y+temp_dy);
-                sad = calculate_sad(reference_block, current_block, x, y, temp_dx, temp_dy);
+                sad = calculate_sad(reference_block, current_block);
 
                 if (sad < temp_sad) {
                     temp_sad = sad;

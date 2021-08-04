@@ -1,13 +1,17 @@
 #include "sad.h"
-#include "test.h"
 
-int calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE], unsigned char current_block[BLOCK_SIZE][BLOCK_SIZE], int x, int y, int dx, int dy) {
-    int diff, sad = 0;
-    int i, j;
+unsigned int calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE], unsigned char current_block[BLOCK_SIZE][BLOCK_SIZE]) {
+    register signed int diff;
+    register unsigned int sad;
+    register unsigned int reference_pixel, current_pixel;
+    register unsigned int x, y;
 
-    for (i = 0; i < BLOCK_SIZE; i++) {
-        for (j = 0; j < BLOCK_SIZE; j++){
-            diff = (int) current_block[i][j] - (int) reference_block[i][j];
+    for (y = 0; y < 8; y++) {
+        for (x = 0; x < 8; x++) {
+            reference_pixel = reference_block[y][x];
+            current_pixel = current_block[y][x];
+
+            diff = current_pixel - reference_pixel;
 
             // Get the absolute value
             if (diff < 0)
