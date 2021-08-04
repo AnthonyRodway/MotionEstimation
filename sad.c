@@ -6,6 +6,7 @@ unsigned int calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE]
     register unsigned int reference_pixel, current_pixel;
     register unsigned int x, y;
 
+    // Enter the nested loops to traverse the 8x8 blocks 
     for (y = 0; y < 8; y++) {
         for (x = 0; x < 8; x++) {
             reference_pixel = reference_block[y][x];
@@ -18,6 +19,8 @@ unsigned int calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE]
                 sad -= diff;
             else
                 sad += diff;
+
+            // __asm__("SAD %1, %2, %0" : "=r" (sad) : "r" (reference_pixel), "r" (current_pixel));
         }
     }
     
@@ -25,8 +28,13 @@ unsigned int calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE]
 }
 
 void get_block(int frame_size, unsigned char frame[frame_size][frame_size], unsigned char block[BLOCK_SIZE][BLOCK_SIZE], int x, int y) {
-    memset(block, 0, sizeof(block[0][0]) * BLOCK_SIZE * BLOCK_SIZE);
+    // declare local variables
     int i, j = 0;
+    
+    //
+    memset(block, 0, sizeof(block[0][0]) * BLOCK_SIZE * BLOCK_SIZE);
+    
+    // loop through the memory to get a block from the given frame
     for (i = 0, j = y; i < BLOCK_SIZE && j < frame_size; i++, j++) {
         memcpy(block[i], frame[j]+x, sizeof(unsigned char) * BLOCK_SIZE);
     }
