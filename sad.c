@@ -4,15 +4,9 @@
 int calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE], unsigned char current_block[BLOCK_SIZE][BLOCK_SIZE], int x, int y, int dx, int dy) {
     int diff, sad = 0;
     int i, j;
-    // printf("SAD's perspective of reference block:\n");
-    // print_matrix(BLOCK_SIZE, BLOCK_SIZE, reference_block);
-    // printf("SAD's perspective of current block:\n");
-    // print_matrix(BLOCK_SIZE, BLOCK_SIZE, current_block);
 
     for (i = 0; i < BLOCK_SIZE; i++) {
         for (j = 0; j < BLOCK_SIZE; j++){
-            // diff = (int) current_block[x + i][y + j] - (int) reference_block[(x + dx) + i][(y + dy) + j];
-
             diff = (int) current_block[i][j] - (int) reference_block[i][j];
 
             // Get the absolute value
@@ -23,7 +17,7 @@ int calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE], unsigne
         }
     }
     
-    return sad; // :(
+    return sad;
 }
 
 void get_block(int frame_size, unsigned char frame[frame_size][frame_size], unsigned char block[BLOCK_SIZE][BLOCK_SIZE], int x, int y) {

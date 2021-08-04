@@ -1,6 +1,7 @@
 #include <string.h>
 
 #define BLOCK_SIZE 8
+#define BLOCK_SIZE_SHIFT 3
 
 /*
  * calculate_sad
@@ -31,9 +32,3 @@ int calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE], unsigne
  * No return value.
  */
 void get_block(int frame_size, unsigned char frame[frame_size][frame_size], unsigned char block[BLOCK_SIZE][BLOCK_SIZE], int x, int y);
-
-struct Result {
-    int x;
-    int y;
-    int sad;
-} Result;
