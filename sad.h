@@ -15,6 +15,9 @@
  */
 unsigned int calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE], unsigned char current_block[BLOCK_SIZE][BLOCK_SIZE]);
 
+// broken, will eventually replace calculate_sad
+unsigned int calculate_sad_optimized_but_broken(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE], unsigned char current_block[BLOCK_SIZE][BLOCK_SIZE]);
+
 /*
  * get_block
  * =============
