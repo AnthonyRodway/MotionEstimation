@@ -134,15 +134,17 @@ int main(int argc, char *argv[]) {
     // Iterate through each block in the reference frame
     for (y = 0; y < reference_frame_header.height; y += BLOCK_SIZE) {
         for (x = 0; x < reference_frame_header.width; x += BLOCK_SIZE) {
-            temp_sad = INT_MAX;
-            get_block(reference_frame_header.height, reference_frame_luminance, reference_block, x, y);
-
-            // identical block
             temp_dx = 0;
             temp_dy = 0;
-            get_block(current_frame_header.height, current_frame_luminance, current_block, x+temp_dx, y+temp_dy);
-            sad = calculate_sad(reference_block, current_block);
+            temp_sad = INT_MAX;
+            
+            // reference block
+            get_block(reference_frame_header.height, reference_frame_luminance, reference_block, x, y);
 
+            // identical block (in current frame)
+            get_block(current_frame_header.height, current_frame_luminance, current_block, x, y);
+            sad = calculate_sad(reference_block, current_block);
+            
             if (sad < temp_sad) {
                 temp_sad = sad;
                 dx = temp_dx;
