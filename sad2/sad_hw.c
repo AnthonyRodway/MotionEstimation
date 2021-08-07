@@ -6,21 +6,14 @@ unsigned int calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE]
     register unsigned int reference_pixel, current_pixel;
     register unsigned int x, y;
 
-    // Enter the nested loops to traverse the 8x8 blocks 
-    for (y = 0; y < 8; y++) {
-        for (x = 0; x < 8; x++) {
+    // Iterate over each pixel in both blocks
+    for (y = 0; y < BLOCK_SIZE; y++) {
+        for (x = 0; x < BLOCK_SIZE; x++) {
             reference_pixel = reference_block[y][x];
             current_pixel = current_block[y][x];
 
-            diff = current_pixel - reference_pixel;
-
-            // Get the absolute value
-            if (diff < 0)
-                sad -= diff;
-            else
-                sad += diff;
-
-            // __asm__("SAD %1, %2, %0" : "=r" (sad) : "r" (reference_pixel), "r" (current_pixel));
+            // Get the absolute value of the difference between the two pixels
+            __asm__("SAD %1, %2, %0" : "=r" (sad) : "r" (reference_pixel), "r" (current_pixel));
         }
     }
     

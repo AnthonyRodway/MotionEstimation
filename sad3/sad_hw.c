@@ -1,11 +1,15 @@
 #include "sad.h"
 
 unsigned int calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE], unsigned char current_block[BLOCK_SIZE][BLOCK_SIZE]) {
+    // Register variables
     register signed int diff;
     register unsigned int sad = 0;
     register unsigned int four_reference_pixels = 0;
     register unsigned int four_current_pixels = 0;
     register unsigned int x, y;
+
+    // Non-register variables
+    int i;
     unsigned char cur_pixel = 0;
     unsigned char ref_pixel = 0;
 
@@ -13,31 +17,25 @@ unsigned int calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE]
     for (y = 0; y < BLOCK_SIZE; y++) {
         // One register can hold 4 pixels, so we iterate x by 4
         for (x = 0; x < BLOCK_SIZE; x += 4) {
-            // Copy four pixels from each block
+            // Copy four pixels from the reference block
             four_reference_pixels = 0;
             four_reference_pixels |= (reference_block[y][x] << 24);
             four_reference_pixels |= (reference_block[y][x+1] << 16);
             four_reference_pixels |= (reference_block[y][x+2] << 8);
             four_reference_pixels |= reference_block[y][x+3];
 
+            // Copy four pixels from the current block
             four_current_pixels = 0;
             four_current_pixels |= (current_block[y][x] << 24);
             four_current_pixels |= (current_block[y][x+1] << 16);
             four_current_pixels |= (current_block[y][x+2] << 8);
             four_current_pixels |= current_block[y][x+3];
 
-            if (four_reference_pixels == four_current_pixels) continue;
-
-            // __asm__("SAD %1, %2, %0" : "=r" (sad) : "r" (reference_pixel), "r" (current_pixel));
-            for (int i = 3; i >= 0; i--) {
-                ref_pixel = (four_reference_pixels >> (8*i)) & 0xff;
-                cur_pixel = (four_current_pixels >> (8*i)) & 0xff;
-
-                diff = cur_pixel - ref_pixel;
-                if (diff < 0) sad -= diff;
-                else          sad += diff;
-            }
+            // Calculate the SAD between the four pairs of pixels
+            __asm__("SAD %1, %2, %0" : "=r" (sad) : "r" (four_reference_pixels), "r" (four_current_pixels));
         }
     }
     return sad;
 }
+
+ 
