@@ -127,9 +127,9 @@ int main(int argc, char *argv[]) {
 
     // Create or open and overwrite the output file
     FILE *output_file;
-    output_file = fopen("Motion Estimation Output.txt", "w");
-    fprintf(output_file, "Block ( x-block, y-block ) -> ( x-displacement, y-displacement, SAD )\n");
-    fprintf(output_file, "_____________________________________________________________________\n");
+    output_file = fopen("output.txt", "w");
+    fprintf(output_file, "Block (x, y) -> (dx, dy, SAD)\n");
+    fprintf(output_file, "===============================\n");
 
     // Iterate through each block in the reference frame
     for (y = 0; y < reference_frame_header.height; y += BLOCK_SIZE) {
@@ -265,8 +265,8 @@ int main(int argc, char *argv[]) {
 
             // if either the x displacement or y displacement is non-zero
             if (dx != 0 || dy != 0) {
-                printf("Block (%d, %d) -> (%d, %d, %d)\n", x >> BLOCK_SIZE_SHIFT, y >> BLOCK_SIZE_SHIFT, dx, dy, temp_sad ); 
-                fprintf(output_file, "Block ( %7d, %7d ) -> ( %14d, %14d, %3d )\n", x >> BLOCK_SIZE_SHIFT, y >> BLOCK_SIZE_SHIFT, dx, dy, temp_sad );
+                printf("Block (%d, %d) -> (%d, %d, %d)\n", x >> BLOCK_SIZE_SHIFT, y >> BLOCK_SIZE_SHIFT, dx, dy, temp_sad); 
+                fprintf(output_file, "Block (%d, %d) -> (%d, %d, %d)\n", x >> BLOCK_SIZE_SHIFT, y >> BLOCK_SIZE_SHIFT, dx, dy, temp_sad);
             }
         }
     }
