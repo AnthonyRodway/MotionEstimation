@@ -14,17 +14,19 @@ unsigned int calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE]
         // One register can hold 4 pixels, so we iterate x by 4
         for (x = 0; x < BLOCK_SIZE; x += 4) {
             // Copy four pixels from each block
+            four_reference_pixels = 0;
             four_reference_pixels |= (reference_block[y][x] << 24);
             four_reference_pixels |= (reference_block[y][x+1] << 16);
             four_reference_pixels |= (reference_block[y][x+2] << 8);
             four_reference_pixels |= reference_block[y][x+3];
 
+            four_current_pixels = 0;
             four_current_pixels |= (current_block[y][x] << 24);
             four_current_pixels |= (current_block[y][x+1] << 16);
             four_current_pixels |= (current_block[y][x+2] << 8);
             four_current_pixels |= current_block[y][x+3];
 
-            if (four_reference_pixels == 0 && four_current_pixels == 0) continue;
+            if (four_reference_pixels == four_current_pixels) continue;
 
             // __asm__("SAD %1, %2, %0" : "=r" (sad) : "r" (reference_pixel), "r" (current_pixel));
             for (int i = 3; i >= 0; i--) {
