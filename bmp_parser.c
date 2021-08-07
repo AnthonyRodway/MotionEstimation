@@ -30,8 +30,6 @@ void get_width_height(FILE *file, BitmapHeader *header) {
         temp = (unsigned int) data[i] << (i * 8);
         header->height += temp;
     }
-
-    //printf("\nwidth %i and height %i\n", header->width, header->height);
 }
 
 void print_bmp_header(char *filename, BitmapHeader *header) {
