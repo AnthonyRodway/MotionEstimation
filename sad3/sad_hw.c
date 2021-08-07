@@ -1,4 +1,4 @@
-#include "sad.h"
+#include "../sad.h"
 
 unsigned int calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE], unsigned char current_block[BLOCK_SIZE][BLOCK_SIZE]) {
     // Register variables
