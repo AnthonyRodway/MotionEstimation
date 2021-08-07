@@ -1,11 +1,12 @@
 # MotionEstimation
 ### Project Repository for SENG 440 Class on Embedded Systems 
 #### Currently our program is optimized and will run on linux based machines. Mac is untested and on Windows there is a stack size problem. 
+<br/><br/>
 The user is able to compile all project files with the provided Makefile using the command:
 <pre><code>make
 </code></pre>
-The user may also compile and test the unoptimized project files usingthe command:
-<pre><code>make unoptimized
+The user may also compile and test the other SAD implimentations using the commands:
+<pre><code>make second / make third
 </code></pre>
 </code></pre>
 or furthermore to clean all executables in the directory, the command:

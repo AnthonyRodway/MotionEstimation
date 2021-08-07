@@ -10,20 +10,23 @@ CFLAGS  = -g -Wall
 MAIN = main
 BMP = bmp_parser
 SAD = sad
-TEST = test
-
-MAIN_U = main_unoptimized
-SAD_U = unoptimized_sad
+SAD_1 = sad1
+SAD_2 = sad2
 
 all: $(MAIN)
 
 $(MAIN): $(MAIN).c
 	$(CC) $(CFLAGS) -o $(MAIN) $(MAIN).c $(BMP).c $(SAD).c 
 
-unoptimized: $(MAIN_U)
+second: $(MAIN)
 
 $(MAIN_U): $(MAIN).c
-	$(CC) $(CFLAGS) -o $(MAIN_U) $(MAIN).c $(BMP).c $(SAD_U).c 
+	$(CC) $(CFLAGS) -o $(MAIN_U) $(MAIN).c $(BMP).c $(SAD_1).c 
+
+third: $(MAIN)
+
+$(MAIN_U): $(MAIN).c
+	$(CC) $(CFLAGS) -o $(MAIN_U) $(MAIN).c $(BMP).c $(SAD_2).c 
 
 clean:
 	@echo "Cleaning All Executables" 
