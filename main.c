@@ -2,6 +2,31 @@
 #include "bmp_parser.h"
 #include "sad.h"
 
+/*
+ * get_block
+ * =============
+ * Gets a block of size {BLOCK_SIZE} from a frame, starting at provided coordinates.
+ * 
+ * frame_size: the size of the frame 
+ * frame:      the frame
+ * block:      a block to store the result
+ * x:          the x value to start from
+ * y:          the y value to start from
+ * 
+ * No return value
+ */
+void get_block(int frame_size, unsigned char frame[frame_size][frame_size], unsigned char block[BLOCK_SIZE][BLOCK_SIZE], int x, int y) {
+    int i, j = 0;
+
+    // Clear block
+    memset(block, 0, sizeof(block[0][0]) * BLOCK_SIZE * BLOCK_SIZE);
+
+    // Copy block from frame
+    for (i = 0, j = y; i < BLOCK_SIZE && j < frame_size; i++, j++) {
+        memcpy(block[i], frame[j]+x, sizeof(unsigned char) * BLOCK_SIZE);
+    }
+}
+
 int main(int argc, char *argv[]) {
     // Argument validation
     if (argc != 3) {
