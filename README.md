@@ -6,7 +6,7 @@ The user is able to compile all project files with the provided Makefile using t
 <pre><code>make
 </code></pre>
 The user may also compile and test the other SAD implimentations using the commands:
-<pre><code>make second / make third
+<pre><code>make second / make third / make fourth / make all
 </code></pre>
 </code></pre>
 or furthermore to clean all executables in the directory, the command:
