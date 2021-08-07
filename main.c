@@ -210,8 +210,8 @@ int main(int argc, char *argv[]) {
                 temp_dx = 0;
                 temp_dy = BLOCK_SIZE;
                 get_block(current_frame_header.height, current_frame_luminance, current_block, x+temp_dx, y+temp_dy);
-
                 sad = calculate_sad(reference_block, current_block);
+
                 if (sad < temp_sad) {
                     temp_sad = sad;
                     dx = temp_dx;
