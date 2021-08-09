@@ -23,8 +23,6 @@ uint32_t calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE], un
                 sad2 -= diff2;
             else
                 sad2 += diff2;
-
-            
         }
     }
 
