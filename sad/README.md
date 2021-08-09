@@ -1,1 +1,0 @@
-Unoptimized, pure software implementation of the SAD algorithm

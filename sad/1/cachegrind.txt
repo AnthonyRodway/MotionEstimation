@@ -1,0 +1,28 @@
+==6409== Cachegrind, a cache and branch-prediction profiler
+==6409== Copyright (C) 2002-2017, and GNU GPL'd, by Nicholas Nethercote et al.
+==6409== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==6409== Command: ./sad.exe ../../testing/frame1.bmp ../../testing/frame2.bmp
+==6409== Parent PID: 6384
+==6409== 
+--6409-- warning: L3 cache found, using its data for the LL simulation.
+==6409== error calling PR_SET_PTRACER, vgdb might block
+==6409== 
+==6409== I   refs:      246,445,397
+==6409== I1  misses:          1,346
+==6409== LLi misses:          1,315
+==6409== I1  miss rate:        0.00%
+==6409== LLi miss rate:        0.00%
+==6409== 
+==6409== D   refs:      146,760,811  (105,919,368 rd   + 40,841,443 wr)
+==6409== D1  misses:         75,186  (     41,130 rd   +     34,056 wr)
+==6409== LLd misses:         35,377  (      2,088 rd   +     33,289 wr)
+==6409== D1  miss rate:         0.1% (        0.0%     +        0.1%  )
+==6409== LLd miss rate:         0.0% (        0.0%     +        0.1%  )
+==6409== 
+==6409== LL refs:            76,532  (     42,476 rd   +     34,056 wr)
+==6409== LL misses:          36,692  (      3,403 rd   +     33,289 wr)
+==6409== LL miss rate:          0.0% (        0.0%     +        0.1%  )
+==6409== 
+==6409== Branches:       24,423,960  ( 18,029,634 cond +  6,394,326 ind)
+==6409== Mispredicts:       267,607  (    267,419 cond +        188 ind)
+==6409== Mispred rate:          1.1% (        1.5%     +        0.0%   )
