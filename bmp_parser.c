@@ -19,16 +19,21 @@ void get_width_height(FILE *file, BitmapHeader *header) {
     header->height = 0;
 
     // Traverse through bytes 0-3 to get the width
-    for(i = 0; i < LENGTH/2; i++){
+    for (i = 0; i < LENGTH/2; i++) {
         temp = (unsigned int) data[i] << (i * 8);
         header->width += temp;
     }
     
     // Traverse through bytes 4-7 to get the height
     temp = 0;
-    for(i = 4; i < LENGTH; i++){
+    for (i = 4; i < LENGTH; i++) {
         temp = (unsigned int) data[i] << (i * 8);
         header->height += temp;
+    }
+
+    // Fallback
+    if (header->height == 0) {
+        header->height = header->width;
     }
 }
 
@@ -42,5 +47,5 @@ void print_bmp_header(char *filename, BitmapHeader *header) {
         header->offset,
         header->width,
         header->height
-        );
+    );
 }
