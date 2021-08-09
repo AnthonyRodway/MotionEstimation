@@ -1,15 +1,15 @@
 #include "../sad.h"
 
-unsigned int calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE], unsigned char current_block[BLOCK_SIZE][BLOCK_SIZE]) {
+uint32_t calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE], unsigned char current_block[BLOCK_SIZE][BLOCK_SIZE]) {
     // Register variables
-    register signed int diff;
-    register unsigned int sad = 0;
-    register unsigned int four_reference_pixels = 0;
-    register unsigned int four_current_pixels = 0;
-    register unsigned int x, y;
+    register int32_t diff;
+    register uint32_t sad = 0;
+    register uint32_t four_reference_pixels = 0;
+    register uint32_t four_current_pixels = 0;
+    register uint32_t x, y;
 
     // Non-register variables
-    int i;
+    int32_t i;
     unsigned char cur_pixel = 0;
     unsigned char ref_pixel = 0;
 

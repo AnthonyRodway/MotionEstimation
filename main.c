@@ -15,8 +15,8 @@
  * 
  * No return value
  */
-void get_block(int frame_size, unsigned char frame[frame_size][frame_size], unsigned char block[BLOCK_SIZE][BLOCK_SIZE], int x, int y) {
-    int i, j = 0;
+void get_block(int32_t frame_size, unsigned char frame[frame_size][frame_size], unsigned char block[BLOCK_SIZE][BLOCK_SIZE], int32_t x, int32_t y) {
+    int32_t i, j = 0;
 
     // Clear block
     memset(block, 0, sizeof(block[0][0]) * BLOCK_SIZE * BLOCK_SIZE);
@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
 
     // Initialize variables to hold pixel colour components as well as counters
     unsigned char red, green, blue = 0;
-    unsigned int x, y;
+    uint32_t x, y;
 
     // Initialize arrays to hold luminance values of both frames
     unsigned char reference_frame_luminance[reference_frame_header.height][reference_frame_header.width];
@@ -115,8 +115,8 @@ int main(int argc, char *argv[]) {
     fclose(current_frame_fp);
 
     // declare local variables
-    int temp_dx, temp_dy, temp_sad, dx, dy;
-    unsigned int sad;
+    int32_t temp_dx, temp_dy, dx, dy;
+    uint32_t temp_sad, sad;
 
     // create blocks from the current and reference frames 
     unsigned char current_block[BLOCK_SIZE][BLOCK_SIZE];

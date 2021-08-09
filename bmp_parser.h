@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <math.h>
+#include <inttypes.h>
 
 #pragma pack(1)
 
@@ -20,13 +21,13 @@
  * Reference: https://en.wikipedia.org/wiki/BMP_file_format
  */
 typedef struct BitmapHeader {
-    unsigned short type;
-    unsigned int   size;
-    unsigned short reserved_1;
-    unsigned short reserved_2;
-    unsigned int   offset;
-    unsigned int   width;
-    unsigned int   height;
+    uint16_t type;
+    uint32_t size;
+    uint16_t reserved_1;
+    uint16_t reserved_2;
+    uint32_t offset;
+    uint32_t width;
+    uint32_t height;
 } BitmapHeader;
 
 /*

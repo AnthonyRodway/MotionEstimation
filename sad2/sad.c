@@ -1,10 +1,10 @@
 #include "../sad.h"
 
-unsigned int calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE], unsigned char current_block[BLOCK_SIZE][BLOCK_SIZE]) {
-    register signed int diff;
-    register unsigned int sad;
-    register unsigned int reference_pixel, current_pixel;
-    register unsigned int x, y;
+uint32_t calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE], unsigned char current_block[BLOCK_SIZE][BLOCK_SIZE]) {
+    register int32_t diff;
+    register uint32_t sad;
+    register uint32_t reference_pixel, current_pixel;
+    register uint32_t x, y;
 
     // Iterate over each pixel in both blocks
     for (y = 0; y < BLOCK_SIZE; y++) {
@@ -18,8 +18,6 @@ unsigned int calculate_sad(unsigned char reference_block[BLOCK_SIZE][BLOCK_SIZE]
                 sad -= diff;
             else
                 sad += diff;
-
-            
         }
     }
     return sad;
