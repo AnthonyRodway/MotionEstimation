@@ -1,21 +1,14 @@
 #!/bin/bash
 
-for (( i=0; i<=3; i++ ))
+cd $1
+
+for (( j=1; j<=7; j++ ))
 do
-    if [ $i -eq 0 ]
-    then
-        cd "sad"
-    else
-        cd "sad$i"
-    fi
+    cd $j
 
-    for (( j=1; j<=7; j++ ))
-    do
-        cd $j
+    (time ./sad.exe ../../frame1.bmp ../../frame2.bmp) 2> time.txt
 
-        (time ./sad.exe ../../frame1.bmp ../../frame2.bmp) 2> time.txt
-
-        cd ..
-    done
     cd ..
 done
+
+cd ..

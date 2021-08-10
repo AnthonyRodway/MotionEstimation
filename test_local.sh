@@ -22,3 +22,5 @@ do
         cd ..
     fi
 done
+
+cd ..
