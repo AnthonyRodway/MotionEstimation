@@ -11,6 +11,24 @@ The following files contain their respective implementations:
 * ./sad3 contains the Storing Multiple Pixels in Each Register Implementation 
 * ./sad4 contains an extra implementation not covered in the report or compilation/testing scripts
 
+## Using the Makefile
+The makefile is written to make compiling the software implementations easier on Linux Machines:
+* The basic command `make` will compile the implementations in the sad, sad1, sad2 and sad3 directories.
+
+You may also compile them individually:
+* To compile the software implementation in sad: `make basic`
+    * the resulting executable is named `sad_executable`
+* To compile the software implementation in sad1: `make first`
+    * the resulting executable is named `sad_executable1`
+* To compile the software implementation in sad2: `make second`
+    * the resulting executable is named `sad_executable2`
+* To compile the software implementation in sad3: `make third`
+    * the resulting executable is named `sad_executable3`
+
+Lastly, if you want to easily remove the executables made from the Makefile. Run `make clean`.
+
+If you want to compile our implementations on a 32-bit ARM machine or on a 64-bit Linux machine with optimization flags, please follow the steps below. 
+
 ## Compilation
 The user is able to compile the executable running one of the following commands depending on the target system:  
 * **32-bit (ARM)**: `arm-linux-gcc -static main.c bmp_parser.c [sad|sad1|sad2|sad3|sad4]/sad.c -o [executable name]`
